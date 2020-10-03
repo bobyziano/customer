@@ -1,24 +1,5 @@
 ﻿
-
-
-function Entry-Note 
-{
-
-param (
-        [string] $note,
-        [string] $act
-      )
-
-    $act = $cmbActivity.SelectedItem.ToString()
-    $note = $txtNote.Text
-    $newRow = New-Object PsObject -Property @{ activity = $act ; date = (Get-Date).Date ; note = $note ; status = "nueva" } | select activity, date, note, status
-    $newRow | Export-Excel -Path .\data\data.xlsx -WorksheetName note -Append
-    $noteForm.Close()
-}
-
 $actData = Import-Excel -Path ".\data\data.xlsx" -WorksheetName activity
-
-
 
 $noteForm = Create-Form -TitleSW "Add Note" -sizeButtonX 200 -sizeButtonY 50
 

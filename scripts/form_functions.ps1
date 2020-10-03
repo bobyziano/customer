@@ -172,16 +172,16 @@ function Create-GridView
         [Int32] $sizeCalY
         )
     $dataGridView = New-Object System.Windows.Forms.DataGridView -Property @{
-                                                                                Size = New-Object System.Drawing.Size(400,250)
+                                                                                Size = New-Object System.Drawing.Size($sizeCalX,$sizeCalY)
                                                                                 Location = New-Object System.Drawing.Point($locx,$locy)
                                                                                 ColumnHeadersVisible = $true
+                                                                                AutoSize = $false
+                                                                                AutoSizeRowsMode = 'AllCells'
                                                                                 AutoSizeColumnsMode = 'AllCells' 
                                                                                 SelectionMode = "FullRowSelect"
-                                                                                Font = New-Object System.Drawing.Font("Verdana", 8)
+                                                                                Font = New-Object System.Drawing.Font("Verdana", 14)
                                                                                 ReadOnly = $true
                                                                                 RowHeadersVisible = $true
-                                                                                AutoSize = $true
-                                                                                AutoSizeRowsMode = 'AllCells'
                                                                                 AllowUserToResizeColumns = $true
                                                                                 AllowUserToResizeRows = $false
                                                                                 AllowUserToAddRows = $false

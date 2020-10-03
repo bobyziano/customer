@@ -60,4 +60,28 @@ function Check-Credentials
 }
 
 
+function Entry-Note 
+{
 
+param (
+        [string] $note,
+        [string] $act
+      )
+
+    $act = $cmbActivity.SelectedItem.ToString()
+    $note = $txtNote.Text
+    $newRow = New-Object PsObject -Property @{ activity = $act ; date = (Get-Date).Date ; note = $note ; status = "nueva" } | select activity, date, note, status
+    $newRow | Export-Excel -Path .\data\data.xlsx -WorksheetName note -Append
+    $noteForm.Close()
+}
+
+
+function Entry-Activity
+{
+
+param (
+        [string] $customer,
+        [string] $activity,
+        [string] $description
+      )
+}
