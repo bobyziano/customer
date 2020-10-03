@@ -7,7 +7,7 @@ Push-Location -Path "C:\Users\Gonzalo\Documents\bobyziano\jobs\desarrollo local\
 
 $IconPath = "C:\Users\Gonzalo\Documents\bobyziano\jobs\desarrollo local\idea manager\images\bobyziano.ico"
 $FormFont = New-Object System.Drawing.Font("Verdana", 20)
-$btnFont = [System.Drawing.Font]::new("Verdana", 15, [System.Drawing.FontStyle]::Bold)
+$btnFont = [System.Drawing.Font]::new("Verdana", 15, [System.Drawing.FontStyle]::Regular)
 $LabelFont = [System.Drawing.Font]::new("Verdana", 12, [System.Drawing.FontStyle]::Regular)
 $fontLabel = New-Object System.Drawing.Font("Verdana", 14, [System.Drawing.FontStyle]::Regular)
 $TextFont = New-Object System.Drawing.Font("Verdana", 20, [System.Drawing.FontStyle]::Regular)
@@ -21,6 +21,7 @@ $sizeButtonX = 200
 $sizeButtonY = 50
 
 . .\scripts\functions.ps1
+. .\scripts\form_functions.ps1
 
 try
     {
@@ -35,19 +36,25 @@ try
 
         $cmbCustomer = Create-ComboBox -locX 40 -locY 280
         foreach ($cust in $custData."Account Name") {  $cmbCustomer.Items.Add($cust) }
+        
+        $grdActivities = Create-GridView 20 10 600 250
+            $grdActivities.ColumnCount = 3
+            $grdActivities.Columns[0].Name = "Activity"
+            $grdActivities.Columns[1].Name = "Due Date"
+            $grdActivities.Columns[2].Name = "Status"
+            $grdActivities.ColumnHeadersHeight = 50
+            
+        
+        $cmbCustomer_SelectedIndexChanged = {
+                                             $grdActivities.rows.Clear()
+                                             $source = Import-Excel -Path ".\data\data.xlsx" -WorksheetName "Activity" | Where customer -EQ $cmbCustomer.SelectedItem
+                                             foreach ($act in $source) {
+                                                                        $grdActivities.Rows.Add($act.activity, ($act.due_date).toString("MM-dd-yyyy"), $act.status)
+                                                                       }
+                                            }
+        $cmbCustomer.add_SelectedIndexChanged($cmbCustomer_SelectedIndexChanged)
 
-        $source = Import-Excel -Path ".\data\data.xlsx" -WorksheetName "Activity" | Where customer -EQ $cmbCustomer.SelectedItem
-
-        $grdActivities = Create-GridView 20 10 400 250
-        $grdActivities.ColumnCount = 3
-        $grdActivities.Columns[0].Name = "Activity"
-        $grdActivities.Columns[1].Name = "Description"
-        $grdActivities.Columns[2].Name = "Due Date"
-        $grdActivities.ColumnHeadersHeight = 50
-
-        foreach ($act in $source) {
-                                    $grdActivities.Rows.Add($act.activity, $act.description)
-                                  }
+        
 
 
         $btnCreateCustomer = Create-Button -texto "New" -locX 20 -locY 10 -sizeButtonX 200 -sizeButtonY 60
@@ -94,6 +101,6 @@ try
         [void] $form.ShowDialog()
     }
 catch { 
-        [System.Windows.Forms.MessageBox]::Show($top, "Quizas para la proxima si quieres entrar, abrazo!" , "Información",'OK','Information') 
+        [System.Windows.Forms.MessageBox]::Show($top, "Quizas para la proxima si quieres entrar.!" , "Información",'OK','Information') 
         Write-Log
       }
